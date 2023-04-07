@@ -1,11 +1,18 @@
+import { useState, useEffect } from 'react';
 import useCounterStore from '../store/counterStore';
 import useDataStore from '../store/dataStore';
 import useUserStore from '../store/userStore';
 
 const Home = () => {
+  const [filteredData, setFilteredData] = useState([]);
   const { count, increment, decrement } = useCounterStore();
   const { data, clearData } = useDataStore();
   const { user } = useUserStore();
+
+  useEffect(() => {
+    const filter = data.slice(0, count);
+    setFilteredData(filter);
+  }, [count, data]);
 
   return (
     <div className="flex justify-center flex-col items-center">
@@ -29,11 +36,11 @@ const Home = () => {
           {count} - 1{' '}
         </button>
       </div>
-      {data.length > 0 && (
+      {filteredData.length > 0 && (
         <div className="flex flex-col gap-2 justify-center items-center">
           <h2 className="text-2xl">Lista de amigos</h2>
           <ul>
-            {data.map((item) => (
+            {filteredData.map((item) => (
               <li className="text-center" key={item.id}>
                 {item.name}
               </li>
